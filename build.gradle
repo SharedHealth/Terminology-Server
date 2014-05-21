@@ -29,6 +29,17 @@ task launch(dependsOn: "extractWar") << {
     process.waitFor()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': "org.freeshr.terminology.launch.Main"
+    }
+    from {
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
 task execute(dependsOn: 'build', type: JavaExec) {
     main = "org.freeshr.terminology.launch.Main"
     classpath = sourceSets.main.runtimeClasspath
