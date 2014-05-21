@@ -1,0 +1,45 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+def tomcatVersion = "7.0.34+";
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
+task extractWar(type: Copy) {
+    from zipTree(file("${projectDir}/src/main/resources/openmrs.war"))
+    into file("${buildDir}/openmrs")
+}
+
+task launch(dependsOn: "extractWar") << {
+    def builder = new ProcessBuilder("./gradlew", 'execute')
+    builder.environment().put("SERVER_PORT", "9080")
+    builder.environment().put("BASE_DIR", "${buildDir}")
+    builder.environment().put("CONTEXT_PATH", "openmrs")
+    builder.environment().put("WAR_DIRECTORY", "${buildDir}/openmrs")
+    builder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+    def process = builder.start()
+    process.waitFor()
+}
+
+task execute(dependsOn: 'build', type: JavaExec) {
+    main = "org.freeshr.terminology.launch.Main"
+    classpath = sourceSets.main.runtimeClasspath
+    standardOutput = System.out
+}
+
+dependencies {
+    compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}",
+            "org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
+            "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}",
+            "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
+}
