@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# bdshr-terminology-server        This shell script takes care of starting and stopping
+#                                 the bdshr terminology server
+#
+# chkconfig: - 64 36
+# description: The bdshr terminology server
+# processname: bdshr-terminology-server
+# config: /etc/bdshr-terminology-server/bdshr-terminology-server.conf
+# pidfile: /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
+### BEGIN INIT INFO
+# Provides: bdshr-terminology-server
+# Required-Start: $local_fs $remote_fs $network $named $syslog $time
+# Required-Stop: $local_fs $remote_fs $network $named $syslog $time
+# Short-Description: start and stop bdshr terminology server system,
+# Description: bdshr terminology server system
+### END INIT INFO
+
+. /etc/bdshr-terminology-server/bdshr-terminology-server.conf
+
+case "$1" in
+  start)
+    nohup java -jar /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
+    echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
+    ;;
+  stop)
+    (true) || (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill)
+    ;;
+esac

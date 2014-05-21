@@ -1,9 +1,22 @@
 apply plugin: 'java'
+apply plugin: 'rpm'
 
 sourceCompatibility = 1.7
 version = '1.0'
 
+jar.baseName = 'bdshr-terminology-server'
+
 def tomcatVersion = "7.0.34+";
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.9.1+'
+    }
+}
 
 repositories {
     mavenCentral()
@@ -44,6 +57,77 @@ task execute(dependsOn: 'build', type: JavaExec) {
     main = "org.freeshr.terminology.launch.Main"
     classpath = sourceSets.main.runtimeClasspath
     standardOutput = System.out
+}
+
+task normalizeJarName(type: Copy) {
+    from "${buildDir}" + "/libs/"
+    into "${buildDir}" + "/libs/"
+    include(jar.baseName + '-' + version + '.jar')
+    rename (jar.baseName + '-' + version + '.jar', 'bdshr-terminology-server.jar')
+}
+
+task dist(dependsOn: ['build', 'normalizeJarName'], type: Rpm) {
+    packageName 'bdshr-terminology-server'
+    version '0.1'
+    arch NOARCH
+    os LINUX
+
+    into '/var/lib/bdshr-terminology-server'
+
+    requires('unzip')
+
+    postInstall file("${projectDir}/scripts/postinstall.sh")
+    preUninstall file("${projectDir}/scripts/preuninstall.sh")
+
+    from("${buildDir}/libs/bdshr-terminology-server.jar") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'lib/'
+    }
+
+    from("${projectDir}/resources/") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'etc'
+    }
+
+    from("${projectDir}/scripts/rpm/") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'bin'
+    }
+
+    from("${projectDir}/resources/placeholder") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'run'
+    }
+
+    from("${projectDir}/resources/placeholder") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'log'
+    }
+
+    from("${projectDir}/src/main/resources/openmrs.war") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into '.'
+    }
+
+    from("${projectDir}/resources/placeholder") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'modules'
+    }
+
+    from("${projectDir}/resources/placeholder") {
+        fileMode = 0755
+        createDirectoryEntry = true
+        into 'openmrs'
+    }
+
+
 }
 
 dependencies {
