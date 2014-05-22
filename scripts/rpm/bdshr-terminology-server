@@ -18,25 +18,14 @@
 
 . /etc/bdshr-terminology-server/bdshr-terminology-server.conf
 
-function initprops() {
-    if [[ ! -e ~/.OpenMRS ]]; then
-        mkdir ~/.OpenMRS
-    fi
-    rm -f ~/.OpenMRS/openmrs-runtime.properties
-    cp $openmrs_RUNTIME_PROPERTIES_DIR/openmrs-runtime.properties ~/.OpenMRS
-}
 
 case "$1" in
   start)
-    #ensure that the user who is starting this service has openmrs properties
-    initprops
     #Start
     nohup java -jar /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
     echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
     ;;
   stop)
     (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill -9) || (true)
-    #Ensure that restart will pick up updates to properties
-    rm -f ~/.OpenMRS/openmrs-runtime.properties
     ;;
 esac
