@@ -21,7 +21,7 @@
 function initprops() {
     if [[ ! -e ~/.OpenMRS ]]; then
         mkdir ~/.OpenMRS
-        cp $openmrs_RUNTIME_PROPERTIES_FILE ~/.OpenMRS
+        cp $openmrs_RUNTIME_PROPERTIES_DIR/openmrs-runtime.properties ~/.OpenMRS
     fi
 }
 
@@ -35,5 +35,7 @@ case "$1" in
     ;;
   stop)
     (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill -9) || (true)
+    #Ensure that restart will pick up updates to properties
+    rm -f ~/.OpenMRS/openmrs-runtime.properties
     ;;
 esac
