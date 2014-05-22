@@ -18,12 +18,23 @@
 
 . /etc/bdshr-terminology-server/bdshr-terminology-server.conf
 
+function copyprops() {
+    if [[ ! -e ~/.OpenMRS ]]; then
+        mkdir ~/.OpenMRS
+        cp $openmrs_RUNTIME_PROPERTIES_FILE ~/.OpenMRS
+    fi
+}
+
 case "$1" in
   start)
+    copyprops
+    #Start
     nohup java -jar /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
     echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
     ;;
   stop)
-    (true) || (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill)
+    (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill -9) || (true)
+    #Remove dirs
+    rm -rf ~/.OpenMRS
     ;;
 esac
