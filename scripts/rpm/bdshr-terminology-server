@@ -21,8 +21,9 @@
 function initprops() {
     if [[ ! -e ~/.OpenMRS ]]; then
         mkdir ~/.OpenMRS
-        cp $openmrs_RUNTIME_PROPERTIES_DIR/openmrs-runtime.properties ~/.OpenMRS
     fi
+    rm -f ~/.OpenMRS/openmrs-runtime.properties
+    cp $openmrs_RUNTIME_PROPERTIES_DIR/openmrs-runtime.properties ~/.OpenMRS
 }
 
 case "$1" in
