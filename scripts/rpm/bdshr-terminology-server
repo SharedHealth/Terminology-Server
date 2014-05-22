@@ -18,9 +18,18 @@
 
 . /etc/bdshr-terminology-server/bdshr-terminology-server.conf
 
+link_modules() {
+    if [[ ! -e ~/.OpenMRS ]]; then
+        mkdir ~/.OpenMRS
+    fi
+    if [[ ! -e ~/.OpenMRS/modules ]]; then
+        ln -s $MODULE_REPO ~/.OpenMRS/modules
+    fi
+}
 
 case "$1" in
   start)
+    link_modules
     #Start
     nohup java -jar /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
     echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
