@@ -1,0 +1,10 @@
+---
+- name: install packages
+  tags: mysql
+  apt:
+    state=latest
+    pkg={{item}}
+    update_cache=yes
+  with_items:
+    - mysql-server
+    - mysql-client
