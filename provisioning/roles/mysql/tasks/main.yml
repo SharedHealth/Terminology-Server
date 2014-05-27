@@ -1,10 +1,8 @@
 ---
-- name: install packages
-  tags: mysql
-  apt:
-    state=latest
-    pkg={{item}}
-    update_cache=yes
+
+- name: install mysql and related packages
+  yum: pkg={{ item }}
+       state=present
   with_items:
+    - mysql
     - mysql-server
-    - mysql-client

@@ -6,14 +6,10 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "precise64"
+  config.vm.box = "centos"
+  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
 
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-
-  config.vm.network :private_network, ip: "192.168.33.13"
-  config.vm.hostname = 'tr-server'
-
-  config.vm.provision "shell", inline: "apt-get update --fix-missing"
+  config.vm.network :private_network, ip: "192.168.33.17"
 
   config.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
