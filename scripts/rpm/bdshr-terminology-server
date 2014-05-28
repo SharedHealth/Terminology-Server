@@ -31,7 +31,7 @@ case "$1" in
   start)
     link_modules
     #Start
-    nohup java -jar /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
+    nohup java -jar $SERVER_OPTS /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log &
     echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
     ;;
   stop)
