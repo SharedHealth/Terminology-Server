@@ -31,15 +31,17 @@ task extractWar(type: Copy) {
     into file("${buildDir}/openmrs")
 }
 
-task launch(dependsOn: "extractWar") << {
-    def builder = new ProcessBuilder("./gradlew", 'execute')
-    builder.environment().put("SERVER_PORT", "9080")
-    builder.environment().put("BASE_DIR", "${buildDir}")
-    builder.environment().put("CONTEXT_PATH", "openmrs")
-    builder.environment().put("WAR_DIRECTORY", "${buildDir}/openmrs")
-    builder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
-    def process = builder.start()
-    process.waitFor()
+def properties = new Properties()
+properties.setProperty("SERVER_PORT", "9080")
+properties.setProperty("BASE_DIR", "${buildDir}")
+properties.setProperty("CONTEXT_PATH", "openmrs")
+properties.setProperty("WAR_DIRECTORY", "${buildDir}/openmrs")
+properties.setProperty("OPENMRS_RUNTIME_PROPERTIES_FILE", "${projectDir}/local/openmrs-runtime.properties")
+
+task launch(dependsOn: ['build', 'extractWar'], type: JavaExec) {
+    main "org.freeshr.terminology.launch.Main"
+    classpath sourceSets.main.runtimeClasspath
+    environment properties
 }
 
 jar {
@@ -63,7 +65,7 @@ task normalizeJarName(type: Copy) {
     from "${buildDir}" + "/libs/"
     into "${buildDir}" + "/libs/"
     include(jar.baseName + '-' + version + '.jar')
-    rename (jar.baseName + '-' + version + '.jar', 'bdshr-terminology-server.jar')
+    rename(jar.baseName + '-' + version + '.jar', 'bdshr-terminology-server.jar')
 }
 
 task dist(dependsOn: ['build', 'normalizeJarName'], type: Rpm) {
