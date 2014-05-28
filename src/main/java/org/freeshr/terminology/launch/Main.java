@@ -18,7 +18,7 @@ public class Main {
         tomcat.setPort(valueOf(getenv("SERVER_PORT")));
         tomcat.setBaseDir(getenv("BASE_DIR"));
         Context context = tomcat.addWebapp(getenv("CONTEXT_PATH"), new File(getenv("WAR_DIRECTORY")).getAbsolutePath());
-        context.addParameter("crossDomainSessionSecurity", "false");
+        context.setUseHttpOnly(false);
         tomcat.start();
         tomcat.getServer().await();
     }
