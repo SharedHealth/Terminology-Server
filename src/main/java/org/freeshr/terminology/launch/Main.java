@@ -1,5 +1,6 @@
 package org.freeshr.terminology.launch;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
@@ -16,7 +17,8 @@ public class Main {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(valueOf(getenv("SERVER_PORT")));
         tomcat.setBaseDir(getenv("BASE_DIR"));
-        tomcat.addWebapp(getenv("CONTEXT_PATH"), new File(getenv("WAR_DIRECTORY")).getAbsolutePath());
+        Context context = tomcat.addWebapp(getenv("CONTEXT_PATH"), new File(getenv("WAR_DIRECTORY")).getAbsolutePath());
+        context.addParameter("crossDomainSessionSecurity", "false");
         tomcat.start();
         tomcat.getServer().await();
     }
