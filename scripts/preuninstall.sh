@@ -9,4 +9,4 @@ rm -f /var/run/bdshr-terminology-server
 rm -f /var/log/bdshr-terminology-server
 
 
-true || service bdshr-terminology-server stop
+service bdshr-terminology-server stop || true
