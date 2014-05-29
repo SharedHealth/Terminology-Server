@@ -1,5 +1,4 @@
 ---
-
 - name: install mysql and related packages
   yum: pkg={{ item }}
        state=present
