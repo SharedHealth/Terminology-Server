@@ -16,8 +16,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.playbook = "provisioning/playbook.yml"
+    ansible.verbose = "v"
+    ansible.extra_vars = {mysql_password: "password", mysql_username: "root"}
+    ansible.playbook = "playbooks/terminologyserver/deploy.yml"
+    ansible.inventory_path = "./hosts"
+    ansible.limit = "all"
   end
 
 end

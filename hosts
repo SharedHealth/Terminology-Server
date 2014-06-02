@@ -1,0 +1,2 @@
+[terminolgyserver]
+127.0.0.1 ansible_ssh_port=2200 ansible_connection=ssh ansible_ssh_user=vagrant
