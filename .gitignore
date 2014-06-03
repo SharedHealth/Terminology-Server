@@ -14,8 +14,3 @@
 build/
 out/
 
-#Submodules
-openmrs-module-freeshr_terminology_feed
-openmrs-module-terminology_atomfeed_client
-openmrs-atomfeed
-playbooks
