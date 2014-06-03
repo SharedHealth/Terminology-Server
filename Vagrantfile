@@ -13,6 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     server.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
     end
+    # Install server package
     server.vm.provision :ansible do |ansible|
       ansible.verbose = "vvv"
       ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, mysql_password: "password", mysql_username: "root", rpm: "../../build/distributions/bdshr-terminology-server-0.1.noarch.rpm"}
@@ -20,6 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.inventory_path = "./hosts"
       ansible.limit = "all"
     end
+    #Install the server omod
   end
 
   config.vm.define "client" do |client|

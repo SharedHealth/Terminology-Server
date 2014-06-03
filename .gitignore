@@ -13,3 +13,6 @@
 #Build dirs
 build/
 out/
+
+#Submodules
+openmrs-module-freeshr_terminology_feed
