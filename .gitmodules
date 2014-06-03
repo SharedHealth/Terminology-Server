@@ -1,6 +1,7 @@
 [submodule "playbooks"]
 	path = playbooks
 	url = https://github.com/SharedHealth/FreeSHR-Playbooks.git
+	branch = master
 [submodule "openmrs-module-freeshr_terminology_feed"]
 	path = openmrs-module-freeshr_terminology_feed
 	url = https://github.com/SharedHealth/openmrs-module-freeshr_terminology_feed.git
