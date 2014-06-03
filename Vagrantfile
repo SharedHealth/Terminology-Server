@@ -15,13 +15,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     # Install server package
     server.vm.provision :ansible do |ansible|
-      ansible.verbose = "vvv"
+      ansible.verbose = "v"
       ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, mysql_password: "password", mysql_username: "root", rpm: "../../build/distributions/bdshr-terminology-server-0.1.noarch.rpm"}
       ansible.playbook = "playbooks/terminologyserver/deploy.yml"
       ansible.inventory_path = "./hosts"
       ansible.limit = "all"
     end
+    #Install the atom feed omod
+    server.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, omod: "../../openmrs-atomfeed/openmrs-atomfeed-omod/target/openmrs-atomfeed-2.0-SNAPSHOT.omod"}
+      ansible.playbook = "playbooks/terminologyserver/deploy-omod.yml"
+      ansible.inventory_path = "./hosts"
+      ansible.limit = "all"
+    end
     #Install the server omod
+    server.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, omod: "../../openmrs-module-freeshr_terminology_feed/omod/target/freeshr-terminology-feed-1.0-SNAPSHOT.omod"}
+      ansible.playbook = "playbooks/terminologyserver/deploy-omod.yml"
+      ansible.inventory_path = "./hosts"
+      ansible.limit = "all"
+    end
   end
 
   config.vm.define "client" do |client|

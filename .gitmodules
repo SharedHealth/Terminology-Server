@@ -10,3 +10,7 @@
 	path = openmrs-module-terminology_atomfeed_client
 	url = https://github.com/SharedHealth/openmrs-module-terminology_atomfeed_client.git
 	branch = master
+[submodule "openmrs-atomfeed"]
+	path = openmrs-atomfeed
+	url = https://github.com/ICT4H/openmrs-atomfeed.git
+	branch = master
