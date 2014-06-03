@@ -4,3 +4,6 @@
 [submodule "openmrs-module-freeshr_terminology_feed"]
 	path = openmrs-module-freeshr_terminology_feed
 	url = https://github.com/SharedHealth/openmrs-module-freeshr_terminology_feed.git
+[submodule "openmrs-module-terminology_atomfeed_client"]
+	path = openmrs-module-terminology_atomfeed_client
+	url = https://github.com/SharedHealth/openmrs-module-terminology_atomfeed_client.git
