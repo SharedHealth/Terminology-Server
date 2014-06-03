@@ -16,8 +16,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :ansible do |ansible|
-    ansible.verbose = "v"
-    ansible.extra_vars = {mysql_password: "password", mysql_username: "root", rpm: "../../build/distributions/bdshr-terminology-server-0.1.noarch.rpm"}
+    ansible.verbose = "vvv"
+    ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, mysql_password: "password", mysql_username: "root", rpm: "../../build/distributions/bdshr-terminology-server-0.1.noarch.rpm"}
     ansible.playbook = "playbooks/terminologyserver/deploy.yml"
     ansible.inventory_path = "./hosts"
     ansible.limit = "all"
