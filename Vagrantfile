@@ -47,7 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
     end
     client.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
+      ansible.verbose = "vvv"
       ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, omod: "../../openmrs-module-freeshr_terminology_feed/omod/target/freeshr-terminology-feed-1.0-SNAPSHOT.omod"}
       ansible.playbook = "FreeSHR-Playbooks/bahmni/site.yml"
       ansible.inventory_path = "./hosts"
