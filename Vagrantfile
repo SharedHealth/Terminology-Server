@@ -5,7 +5,6 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
   config.vm.define "server" do |server|
     server.vm.box = "centos"
     server.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
@@ -38,7 +37,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.limit = "all"
     end
   end
+end
 
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "client" do |client|
     client.vm.box = "centos"
     client.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
@@ -66,5 +68,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.limit = "all"
     end
   end
-
 end
