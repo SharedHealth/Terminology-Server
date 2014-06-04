@@ -46,14 +46,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     client.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
     end
-    if ! defined? ARGV[2]
+    print "Do you want to provision Bahmni ? [y/n]: "
+    input = STDIN.gets
+    if input.include? "y"
       client.vm.provision :ansible do |ansible|
+          ansible.verbose = "vvv"
+          ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222}
+          ansible.playbook = "FreeSHR-Playbooks/bahmni/site.yml"
+          ansible.inventory_path = "./hosts"
+          ansible.limit = "all"
+      end
+    end
+    client.vm.provision :ansible do |ansible|
         ansible.verbose = "vvv"
-        ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, omod: File.dirname(__FILE__) + "/openmrs-module-terminology_atomfeed_client/target/openmrs-module-terminology_atomfeed_client-1.0-SNAPSHOT.omod"}
-        ansible.playbook = "FreeSHR-Playbooks/bahmni/site.yml"
+        ansible.extra_vars = {ansible_ssh_user: 'vagrant', ansible_ssh_port: 2222, all_omods: File.dirname(__FILE__) + "/openmrs-module-terminology_atomfeed_client/target/openmrs-module-terminology_atomfeed_client-1.0-SNAPSHOT.omod"}
+        ansible.playbook = "FreeSHR-Playbooks/bahmni/tasks/deploy-omod.yml"
         ansible.inventory_path = "./hosts"
         ansible.limit = "all"
-      end
     end
   end
 
