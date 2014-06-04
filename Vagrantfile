@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.define "server" do |server|
+  config.vm.define "server", primary: true do |server|
     server.vm.box = "centos"
     server.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
     server.vm.network :private_network, ip: "192.168.33.17"
