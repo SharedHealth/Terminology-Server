@@ -1,5 +1,5 @@
 [terminolgyserver]
-127.0.0.1 ansible_ssh_port=2200 ansible_connection=ssh ansible_ssh_user=vagrant
+192.168.33.17 ansible_ssh_port=22 ansible_connection=ssh ansible_ssh_user=vagrant
 
 [bahmni]
-127.0.0.1 ansible_ssh_port=2200 ansible_connection=ssh ansible_ssh_user=vagrant
+192.168.33.18 ansible_ssh_port=22 ansible_connection=ssh ansible_ssh_user=vagrant
