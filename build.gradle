@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'rpm'
 
 sourceCompatibility = 1.7
+
 version = '1.0'
 
 jar.baseName = 'bdshr-terminology-server'
@@ -12,12 +13,8 @@ def openmrsVersion = "1.9.8-SNAPSHOT";
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url 'https://repository.jboss.org/nexus/content/groups/public'
-        }
     }
     dependencies {
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.9.1+'
         classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.9.1+'
     }
 }
@@ -37,8 +34,8 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }
 
-task extractWar(type: Copy) {
-    from zipTree(file("${projectDir}/src/main/resources/openmrs.war"))
+task extractWar(dependsOn: 'downloadMRSWar', type: Copy) {
+    from zipTree(file("${buildDir}/resources/main/openmrs.war"))
     into file("${buildDir}/openmrs")
 }
 
@@ -53,6 +50,10 @@ task launch(dependsOn: ['build', 'extractWar'], type: JavaExec) {
     main "org.freeshr.terminology.launch.Main"
     classpath sourceSets.main.runtimeClasspath
     environment properties
+}
+
+configurations {
+    mrsWar
 }
 
 jar {
@@ -79,7 +80,7 @@ task normalizeJarName(type: Copy) {
     rename(jar.baseName + '-' + version + '.jar', 'bdshr-terminology-server.jar')
 }
 
-task dist(dependsOn: ['build', 'normalizeJarName'], type: Rpm) {
+task dist(dependsOn: ['build', 'downloadMRSWar', 'normalizeJarName'], type: Rpm) {
     packageName 'bdshr-terminology-server'
     version '0.1'
     arch NOARCH
@@ -122,7 +123,7 @@ task dist(dependsOn: ['build', 'normalizeJarName'], type: Rpm) {
         into 'log'
     }
 
-    from("${projectDir}/src/main/resources/openmrs.war") {
+    from("${buildDir}/resources/main/openmrs.war") {
         fileMode = 0755
         createDirectoryEntry = true
         into '.'
@@ -150,6 +151,15 @@ configurations {
     all*.exclude(group: 'javax.mail', module: 'mail')
 }
 
+task downloadMRSWar << {
+    new File("${buildDir}/resources/main").mkdirs();
+    configurations.mrsWar.resolve().each { file ->
+        if (file.getName().contains("openmrs")) {
+            file.renameTo(new File("${buildDir}/resources/main/openmrs.war"))
+        }
+    }
+}
+
 dependencies {
     compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
@@ -157,11 +167,5 @@ dependencies {
             "org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
             "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}",
             "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
-    compile(group: 'org.openmrs.web', name: 'openmrs-webapp', version: "${openmrsVersion}") {
-        artifact {
-            name = 'openmrs-webapp'
-            extension = 'war'
-            type = 'war'
-        }
-    }
+    mrsWar "org.openmrs.web:openmrs-webapp:${openmrsVersion}@war"
 }
