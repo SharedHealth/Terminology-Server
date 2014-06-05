@@ -7,19 +7,30 @@ version = '1.0'
 jar.baseName = 'bdshr-terminology-server'
 
 def tomcatVersion = "7.0.34+";
+def openmrsVersion = "1.9.8-SNAPSHOT";
 
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://repository.jboss.org/nexus/content/groups/public'
+        }
     }
-
     dependencies {
+        classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.9.1+'
         classpath 'com.netflix.nebula:gradle-ospackage-plugin:1.9.1+'
     }
 }
 
 repositories {
     mavenCentral()
+    jcenter()
+    maven {
+        url 'http://mavenrepo.openmrs.org/nexus/content/repositories/public'
+    }
+    maven {
+        url 'https://oss.sonatype.org/content/repositories'
+    }
 }
 
 task wrapper(type: Wrapper) {
@@ -49,7 +60,7 @@ jar {
         attributes 'Main-Class': "org.freeshr.terminology.launch.Main"
     }
     from {
-        configurations.runtime.collect {
+        configurations.compile.collect {
             it.isDirectory() ? it : zipTree(it)
         }
     }
@@ -132,6 +143,13 @@ task dist(dependsOn: ['build', 'normalizeJarName'], type: Rpm) {
 
 }
 
+configurations {
+    all*.exclude(group: 'com.sun.jdmk', module: 'jmxtools')
+    all*.exclude(group: 'com.sun.jmx', module: 'jmxri')
+    all*.exclude(group: 'javax.jms', module: 'jms')
+    all*.exclude(group: 'javax.mail', module: 'mail')
+}
+
 dependencies {
     compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
@@ -139,4 +157,11 @@ dependencies {
             "org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
             "org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}",
             "org.apache.tomcat:tomcat-jsp-api:${tomcatVersion}"
+    compile(group: 'org.openmrs.web', name: 'openmrs-webapp', version: "${openmrsVersion}") {
+        artifact {
+            name = 'openmrs-webapp'
+            extension = 'war'
+            type = 'war'
+        }
+    }
 }
