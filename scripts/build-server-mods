@@ -1,0 +1,3 @@
+#!/bin/bash
+(cd /vagrant/openmrs-atomfeed && mvn clean install)
+(cd /vagrant/openmrs-module-freeshr_terminology_feed && mvn clean install)
