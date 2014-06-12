@@ -1,4 +1,0 @@
-#!/bin/bash
-(cd /vagrant/openmrs-atomfeed && mvn clean install)
-(cd /vagrant/openmrs-module-terminology_atomfeed_client && mvn clean install)
-/vagrant/bd-config/scripts/package.sh

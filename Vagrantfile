@@ -12,15 +12,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     server.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
     end
-    #mvn etc
-    server.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.playbook = "FreeSHR-Playbooks/dev/site.yml"
-      ansible.extra_vars = {dev_host_name: "terminolgyserver"}
-      ansible.inventory_path = "./hosts"
-      ansible.limit = "all"
-    end
-    server.vm.provision :shell, path: "scripts/build-server-mods"
     # Install server package
     server.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
@@ -53,15 +44,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     client.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
     end
-    #mvn etc
-    client.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.playbook = "FreeSHR-Playbooks/dev/site.yml"
-      ansible.extra_vars = {dev_host_name: "bahmni"}
-      ansible.inventory_path = "./hosts"
-      ansible.limit = "all"
-    end
-    client.vm.provision :shell, path: "scripts/build-client-mods"
     print "Do you want to provision Bahmni ? [y/n]: "
     input = STDIN.gets
     if input.include? "y"

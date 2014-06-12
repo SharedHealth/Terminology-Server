@@ -1,0 +1,7 @@
+#!/bin/bash
+BASE_DIR=$(dirname $0)
+(cd $BASE_DIR/../openmrs-atomfeed && mvn clean install -DskipTests)
+(cd $BASE_DIR/../openmrs-module-freeshr_terminology_feed && mvn clean install -DskipTests)
+(cd $BASE_DIR/../openmrs-atomfeed && mvn clean install -DskipTests)
+(cd $BASE_DIR/../openmrs-module-terminology_atomfeed_client && mvn clean install -DskipTests)
+($BASE_DIR/../bd-config/scripts/package.sh)
