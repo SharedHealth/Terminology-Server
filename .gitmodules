@@ -10,11 +10,3 @@
 	path = openmrs-module-freeshr_terminology_feed
 	url = https://github.com/SharedHealth/openmrs-module-freeshr_terminology_feed.git
 	branch = master
-[submodule "openmrs-module-terminology_atomfeed_client"]
-	path = openmrs-module-terminology_atomfeed_client
-	url = https://github.com/SharedHealth/openmrs-module-terminology_atomfeed_client.git
-	branch = master
-[submodule "bd-config"]
-	path = bd-config
-	url = https://github.com/SharedHealth/bd-config.git
-	branch = master
