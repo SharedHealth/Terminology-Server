@@ -8,7 +8,7 @@ version = '1.0'
 jar.baseName = 'bdshr-terminology-server'
 
 def tomcatVersion = "7.0.34+";
-def openmrsVersion = "1.9.8-SNAPSHOT";
+def openmrsVersion = "1.9.8";
 
 buildscript {
     repositories {
