@@ -16,6 +16,18 @@
 # Description: bdshr terminology server system
 ### END INIT INFO
 
+if [[ ! -e /var/run/bdshr-terminology-server ]]; then
+    ln -s /var/lib/bdshr-terminology-server/run /var/run/bdshr-terminology-server
+fi
+
+if [[ ! -e /var/run/bdshr-terminology-server/openmrs ]]; then
+    ln -s /var/lib/bdshr-terminology-server/openmrs /var/run/bdshr-terminology-server/openmrs
+fi
+
+if [[ ! -e /var/log/bdshr-terminology-server ]]; then
+    ln -s /var/lib/bdshr-terminology-server/log /var/log/bdshr-terminology-server
+fi
+
 . /etc/bdshr-terminology-server/bdshr-terminology-server.conf
 
 link_modules() {
