@@ -14,3 +14,5 @@
 build/
 out/
 
+#OSX Specific files
+**/*.DS_Store
