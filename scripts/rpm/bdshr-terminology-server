@@ -39,11 +39,11 @@ bdshr_terminology_server_pid() {
 }
 
 link_modules() {
-    if [[ ! -e ~/.OpenMRS ]]; then
-        mkdir ~/.OpenMRS
+    if [[ ! -e /home/$BDSHR_TR_SERVER_USER/.OpenMRS ]]; then
+        mkdir /home/$BDSHR_TR_SERVER_USER/.OpenMRS
     fi
-    if [[ ! -e ~/.OpenMRS/modules ]]; then
-        ln -s $MODULE_REPO ~/.OpenMRS/modules
+    if [[ ! -e/home/$BDSHR_TR_SERVER_USER/.OpenMRS/modules ]]; then
+        ln -s $MODULE_REPO /home/$BDSHR_TR_SERVER_USER/.OpenMRS/modules
     fi
 }
 
