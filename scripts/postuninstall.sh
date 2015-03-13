@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf /var/lib/bdshr-terminology-server
+rm -rf /opt/bdshr-terminology-server
 
 rm -rf /etc/bdshr-terminology-server
 rm -rf /etc/init.d/bdshr-terminology-server

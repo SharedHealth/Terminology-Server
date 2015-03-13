@@ -1,34 +1,42 @@
-#!/bin/sh
+#!/bin/bash
 #
-# bdshr-terminology-server        This shell script takes care of starting and stopping
-#                                 the bdshr terminology server
+# bdshr-terminology-server        start/stop/status script
 #
 # chkconfig: - 64 36
-# description: The bdshr terminology server
+# description: The bdshr-terminology-server shared health record system
 # processname: bdshr-terminology-server
-# config: /etc/bdshr-terminology-server/bdshr-terminology-server.conf
-# pidfile: /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
+# config: /etc/default/bdshr-terminology-server
+# pidfile: /var/run/bdshr-terminology-server/bdshr.pid
 ### BEGIN INIT INFO
 # Provides: bdshr-terminology-server
 # Required-Start: $local_fs $remote_fs $network $named $syslog $time
 # Required-Stop: $local_fs $remote_fs $network $named $syslog $time
-# Short-Description: start and stop bdshr terminology server system,
-# Description: bdshr terminology server system
+# Short-Description: start and stop bdshr-terminology-server system,
+# Description: bdshr-terminology-server system
 ### END INIT INFO
 
-if [[ ! -e /var/run/bdshr-terminology-server ]]; then
-    ln -s /var/lib/bdshr-terminology-server/run /var/run/bdshr-terminology-server
-fi
-
-if [[ ! -e /var/run/bdshr-terminology-server/openmrs ]]; then
-    ln -s /var/lib/bdshr-terminology-server/openmrs /var/run/bdshr-terminology-server/openmrs
-fi
-
-if [[ ! -e /var/log/bdshr-terminology-server ]]; then
-    ln -s /var/lib/bdshr-terminology-server/log /var/log/bdshr-terminology-server
-fi
+export BDSHR_TR_SERVER_USER=sharedhealth
+export BDSHR_TR_SERVER_RUN=/opt/bdshr-terminology-server/bin/start.sh
 
 . /etc/bdshr-terminology-server/bdshr-terminology-server.conf
+
+create_dirs() {
+    if [[ ! -e /var/run/bdshr-terminology-server ]]; then
+        ln -s /opt/bdshr-terminology-server/run /var/run/bdshr-terminology-server
+    fi
+
+    if [[ ! -e /var/run/bdshr-terminology-server/openmrs ]]; then
+        ln -s /opt/bdshr-terminology-server/openmrs /var/run/bdshr-terminology-server/openmrs
+    fi
+
+    if [[ ! -e /var/log/bdshr-terminology-server ]]; then
+        ln -s /opt/bdshr-terminology-server/log /var/log/bdshr-terminology-server
+    fi
+}
+
+bdshr_terminology_server_pid() {
+        echo `ps -fe | grep 'bdshr-terminology-server' | grep -v grep | tr -s " "|cut -d" " -f2`
+}
 
 link_modules() {
     if [[ ! -e ~/.OpenMRS ]]; then
@@ -39,14 +47,63 @@ link_modules() {
     fi
 }
 
-case "$1" in
-  start)
-    link_modules
-    #Start
-    nohup java -jar $SERVER_OPTS /var/lib/bdshr-terminology-server/lib/bdshr-terminology-server.jar > /var/log/bdshr-terminology-server/bdshr-terminology-server.log 2>/var/log/bdshr-terminology-server/bdshr-terminology-server.log < /dev/null &
-    echo $! > /var/run/bdshr-terminology-server/bdshr-terminology-server.pid
-    ;;
-  stop)
-    (cat /var/run/bdshr-terminology-server/bdshr-terminology-server.pid |  xargs -n 1 kill -9) || (true)
-    ;;
+start(){
+    pid=$(bdshr_terminology_server_pid)
+    if [ -n "$pid" ]
+    then
+        echo -e "\e[00;31mService bdshr-terminology-server is already running (pid: $pid)\e[00m"
+    else
+        # Start bdshr
+        create_dirs
+        link_modules
+        echo -e "\e[00;32mStarting bdshr-terminology-server\e[00m"
+        if [ `user_exists $BDSHR_TR_SERVER_USER` = "1" ]
+        then
+                /bin/su $BDSHR_TR_SERVER_USER -c $BDSHR_TR_SERVER_RUN
+        else
+                sh $BDSHR_TR_SERVER_RUN
+        fi
+  fi
+  return 0
+}
+status(){
+          pid=$(bdshr_terminology_server_pid)
+          if [ -n "$pid" ]; then echo -e "\e[00;32mService bdshr-terminology-server is running with pid: $pid\e[00m"
+          else echo -e "\e[00;31mService bdshr-terminology-server is not running\e[00m"
+          fi
+}
+
+stop() {
+	echo -e "\e[00;31mTerminating bdshr-terminology-server\e[00m"
+	kill -9 $(bdshr_pid)
+}
+user_exists(){
+        if id -u $1 >/dev/null 2>&1; then
+        echo "1"
+        else
+                echo "0"
+        fi
+}
+
+case $1 in
+	start)
+	  start
+	;;
+	stop)
+	  stop
+	;;
+	restart)
+	  stop
+	  start
+	;;
+	status)
+		status
+	;;
+	kill)
+		stop
+	;;
+	*)
+
+	;;
 esac
+exit 0

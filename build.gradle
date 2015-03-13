@@ -86,7 +86,7 @@ task dist(dependsOn: ['build', 'downloadMRSWar', 'normalizeJarName'], type: Rpm)
     arch NOARCH
     os LINUX
 
-    into '/var/lib/bdshr-terminology-server'
+    into '/opt/bdshr-terminology-server'
 
     requires('unzip')
 
