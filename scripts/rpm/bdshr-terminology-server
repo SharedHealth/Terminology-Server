@@ -75,7 +75,7 @@ status(){
 
 stop() {
 	echo -e "\e[00;31mTerminating bdshr-terminology-server\e[00m"
-	kill -9 $(bdshr_pid)
+	kill -9 $(bdshr_terminology_server_pid)
 }
 user_exists(){
         if id -u $1 >/dev/null 2>&1; then
