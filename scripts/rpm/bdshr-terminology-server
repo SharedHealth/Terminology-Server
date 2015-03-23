@@ -58,7 +58,7 @@ start(){
         create_dirs
         link_modules
         echo -e "\e[00;32mStarting bdshr-terminology-server\e[00m"
-        if [ `user_exists $BDSHR_TR_SERVER_USER` = "1" ]  && ["$CUR_USER" != "$BDSHR_TR_SERVER_USER"] ;
+        if [ `user_exists $BDSHR_TR_SERVER_USER` = "1" ]  && [ "$CUR_USER" != "$BDSHR_TR_SERVER_USER" ] ;
         then
                 /bin/su $BDSHR_TR_SERVER_USER -c $BDSHR_TR_SERVER_RUN
         else
