@@ -5,32 +5,24 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "nrel/CentOS-6.5-x86_64"
+  config.vm.network "private_network", ip: "192.168.33.17"
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+  config.vm.host_name = "192.168.33.17"
 
-  config.vm.define "server" do |server|
-    server.vm.box = "centos"
-    server.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
-    server.vm.network :private_network, ip: "192.168.33.17"
-    server.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
-    end
-
-    # Install server package
-    server.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.extra_vars = {mysql_password: "password", mysql_username: "root", rpm: File.dirname(__FILE__) + "/build/distributions/bdshr-terminology-server-0.1.noarch.rpm"}
-      ansible.playbook = "FreeSHR-Playbooks/tr-servers.yml"
-      ansible.inventory_path = "./hosts"
-      ansible.limit = "all"
-    end
-
-    #Install the atom feed omod
-    server.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.extra_vars = {omod: File.dirname(__FILE__) + "/openmrs-atomfeed/openmrs-atomfeed-omod/target/openmrs-atomfeed-2.0-SNAPSHOT.omod", atomfeedomod: File.dirname(__FILE__) + "/openmrs-module-freeshr_terminology_feed/omod/target/freeshr-terminology-feed-1.0-SNAPSHOT.omod"}
-      ansible.playbook = "FreeSHR-Playbooks/tr-feed-servers.yml"
-      ansible.inventory_path = "./hosts"
-      ansible.limit = "all"
-    end
+  config.vm.define "192.168.33.17" do |tr|
+      tr.vm.provision "ansible" do |ansible|
+        ansible.inventory_path = "../FreeSHR-Playbooks/local"
+        ansible.playbook =  "../FreeSHR-Playbooks/all.yml"
+        ansible.tags = ["setup", "tr-server", "tr-feed-server"]
+        ansible.extra_vars = {atomfeedomod: "/tmp/openmrs-atomfeed-2.2.omod", restomod: "/tmp/webservices.rest-2.9.omod", trfeedomod: "/tmp/freeshr-terminology-feed-*.omod"}
+        ansible.vault_password_file = "~/.vaultpass.txt"
+        ansible.verbose = "vvvv"
+      end
   end
 
 end
