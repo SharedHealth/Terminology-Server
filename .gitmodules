@@ -1,18 +1,4 @@
-[submodule "openmrs-atomfeed"]
-	path = openmrs-atomfeed
-	url = https://github.com/ICT4H/openmrs-atomfeed.git
-	branch = master
 [submodule "FreeSHR-Playbooks"]
 	path = FreeSHR-Playbooks
 	url = https://github.com/SharedHealth/FreeSHR-Playbooks.git
 	branch = master
-[submodule "openmrs-module-freeshr_terminology_feed"]
-	path = openmrs-module-freeshr_terminology_feed
-	url = https://github.com/SharedHealth/openmrs-module-freeshr_terminology_feed.git
-	branch = master
-[submodule "bd-config"]
-	path = bd-config
-	url = https://github.com/SharedHealth/bd-config.git
-[submodule "openmrs-module-terminology_atomfeed_client"]
-	path = openmrs-module-terminology_atomfeed_client
-	url = https://github.com/SharedHealth/openmrs-module-terminology_atomfeed_client.git
