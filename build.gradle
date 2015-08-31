@@ -31,7 +31,7 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.6'
+    gradleVersion = '1.10'
 }
 
 task extractWar(dependsOn: 'downloadMRSWar', type: Copy) {
