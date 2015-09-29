@@ -26,7 +26,6 @@ public class TerminologyResourceFilter implements Filter {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 logger.debug("Setting session timeout to 10 seconds...");
-                System.out.println("Setting session timeout to 10 seconds...");
                 session.setMaxInactiveInterval(10);
             }
 

@@ -8,7 +8,7 @@ version = '1.0'
 jar.baseName = 'bdshr-terminology-server'
 
 def tomcatVersion = "7.0.34+";
-def openmrsVersion = "1.10.1";
+def openmrsVersion = "1.11.4";
 
 buildscript {
     repositories {
@@ -34,7 +34,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.6'
 }
 
-task extractWar(dependsOn: 'downloadMRSWar', type: Copy) {
+task extractWar(dependsOn: ['downloadMRSWar'], type: Copy) {
     from zipTree(file("${buildDir}/resources/main/openmrs.war"))
     into file("${buildDir}/openmrs")
 }
@@ -157,9 +157,40 @@ task downloadMRSWar << {
     new File("${buildDir}/resources/main").mkdirs();
     configurations.mrsWar.resolve().each { file ->
         if (file.getName().contains("openmrs")) {
-            file.renameTo(new File("${buildDir}/resources/main/openmrs.war"))
+            file.renameTo(new File("${buildDir}/resources/main/openmrs_std.war"))
         }
     }
+}
+
+task updateMRSLogger << {
+    copy {
+        def zipFile = file("${buildDir}/resources/main/openmrs_std.war")
+        def outputDir = file("${buildDir}/resources/main/openmrs")
+        from zipTree(zipFile)
+        into outputDir
+    }
+
+    copy {
+        from "${projectDir}/resources/log4j.xml"
+        into "${buildDir}/resources/main/openmrs/WEB-INF/classes/"
+    }
+
+    task ('rePackageOpenMRS', type: Zip) {
+        from "${buildDir}/resources/main/openmrs"
+        archiveName 'openmrs.war'
+        destinationDir file("${buildDir}/resources/main/")
+    }.execute()
+
+    delete {
+        delete "${buildDir}/resources/main/openmrs", "${buildDir}/resources/main/openmrs_std.war"
+    }
+
+}
+
+
+task copyMRSLogFile(type: Copy) {
+    from "${projectDir}/resources/log4j.xml"
+    into "${buildDir}/resources/main/openmrs/WEB-INF/classes/"
 }
 
 dependencies {
