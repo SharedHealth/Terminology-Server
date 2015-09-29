@@ -157,7 +157,7 @@ task downloadMRSWar << {
     new File("${buildDir}/resources/main").mkdirs();
     configurations.mrsWar.resolve().each { file ->
         if (file.getName().contains("openmrs")) {
-            file.renameTo(new File("${buildDir}/resources/main/openmrs_std.war"))
+            file.renameTo(new File("${buildDir}/resources/main/openmrs.war"))
         }
     }
 }
