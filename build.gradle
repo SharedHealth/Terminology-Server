@@ -3,8 +3,6 @@ apply plugin: 'rpm'
 
 sourceCompatibility = 1.7
 
-version = '1.0'
-
 jar.baseName = 'bdshr-terminology-server'
 
 def tomcatVersion = "7.0.64";
@@ -82,7 +80,7 @@ task normalizeJarName(type: Copy) {
 
 task dist(dependsOn: ['build','downloadMRSWar','normalizeJarName'], type: Rpm) {
     packageName 'bdshr-terminology-server'
-    version '0.1'
+    version '0.2'
     release project.hasProperty('release') ? project.release : '1'
     arch NOARCH
     os LINUX
