@@ -16,9 +16,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "192.168.33.17" do |tr|
       tr.vm.provision "ansible" do |ansible|
-        ansible.inventory_path = "../FreeSHR-Playbooks/local"
+        ansible.inventory_path = "../FreeSHR-Playbooks/inventories/local"
         ansible.playbook =  "../FreeSHR-Playbooks/all.yml"
-        ansible.tags = ["setup", "tr-server", "tr-feed-server"]
+        ansible.tags = ["setup"]
+        ansible.vault_password_file = "~/.vaultpass.txt"
+        ansible.verbose = "vvvv"
+      end
+      tr.vm.provision "ansible" do |ansible|
+        ansible.inventory_path = "../FreeSHR-Playbooks/inventories/local"
+        ansible.playbook =  "../FreeSHR-Playbooks/tr.yml"
+        ansible.tags = ["tr-server", "tr-feed-server"]
         ansible.extra_vars = {atomfeedomod: "/tmp/openmrs-atomfeed-2.5.omod", restomod: "/tmp/webservices.rest-2.12.omod", trfeedomod: "/tmp/freeshr-terminology-feed-*.omod"}
         ansible.vault_password_file = "~/.vaultpass.txt"
         ansible.verbose = "vvvv"
