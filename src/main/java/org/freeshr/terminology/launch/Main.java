@@ -22,9 +22,9 @@ public class Main {
         Context context = tomcat.addWebapp(getenv("CONTEXT_PATH"), new File(getenv("WAR_DIRECTORY")).getAbsolutePath());
         context.setUseHttpOnly(false);
         /*below code has no effect, the web.xml of openmrs file overrides this, irrespective of whether session-config is set or not */
-//        context.setSessionTimeout(5);
-        context.addApplicationListener(TRSessionListener.class.getName());
+        //context.setSessionTimeout(5);
 
+        //context.addApplicationListener(TRSessionListener.class.getName());
         addSessionInvalidationFilter(context);
 
         tomcat.start();

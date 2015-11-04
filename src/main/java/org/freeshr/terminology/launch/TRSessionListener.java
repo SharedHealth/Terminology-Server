@@ -14,7 +14,6 @@ public class TRSessionListener implements HttpSessionListener {
         sessionCount++;
         HttpSession session = se.getSession();
         System.out.println(String.format("Session created [%s]. Total sessions = %s", System.currentTimeMillis(), sessionCount));
-        System.out.println(String.format("Session max inactive (default) interval %s", session.getMaxInactiveInterval()));
     }
 
     @Override
