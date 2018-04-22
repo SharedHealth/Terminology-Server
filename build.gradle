@@ -21,7 +21,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url 'http://mavenrepo.openmrs.org/nexus/content/repositories/public'
+        url 'https://openmrs.jfrog.io/openmrs/public/'
     }
     maven {
         url 'https://oss.sonatype.org/content/repositories'
