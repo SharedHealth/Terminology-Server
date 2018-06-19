@@ -60,5 +60,6 @@
     <root>
         <level value="WARN" />
         <appender-ref ref="fileAppender" />
+        <appender-ref ref="CONSOLE" />
     </root>
 </log4j:configuration>
